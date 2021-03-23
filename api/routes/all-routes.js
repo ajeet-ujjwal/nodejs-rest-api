@@ -1,10 +1,10 @@
 const { check } = require('express-validator');
+const express = require('express');
 const usersController = require('../controllers/user-controller');
 const movieController = require('../controllers/movie-controller');
-const express = require('express');
-const router = express.Router();
 const auth = require('../middleware/auth');
 
+const router = express.Router();
 
 // VALIDATORS
 const registrationValidator = [
