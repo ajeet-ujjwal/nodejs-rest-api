@@ -67,17 +67,13 @@ const setFavouriteMovie = async (req, res) => {
         return res.status(400).json({ error: 'Invalid id' });
     try {
         const movie = await Movie.findById(movieId);
-        const user = await User.findById(req.user.userId);
         if (!movie)
-            return res.status(404).json({ message: 'movie not found.' });
-        if (!user)
-            return res.status(404).json({ message: 'user not found.' });
-        user.favourite_movies.push(movie);
-        await user.save()
+            return res.status(404).json('there is no movie with this id.');
+        const user = await User.findByIdAndUpdate({ _id: req.user.userId }, 
+            { $addToSet: { favourite_movies: movieId } }, { new: true });
         return res.status(200).json(user)
     } catch (err) {
-        console.log(err.message);
-        res.status(500).json({ error: 'server error' + err });
+        res.status(500).json({ error: 'server error ' + err });
     }
 };
 
@@ -88,7 +84,6 @@ const getFavouriteMovies = async (req, res) => {
         if (!user)
             return res.status(404).json({ message: 'user not found.' });
         const favourite_movies = user.favourite_movies;
-        console.log(user);
         return res.status(200).json(favourite_movies);
     } catch (err) {
         return res.status(500).json({ message: 'server error' + err });
