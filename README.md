@@ -34,10 +34,12 @@ Getting a list of movies filterable by a query | GET localhost:5000/movies?searc
 Favourite a Movie | POST localhost:5000/favourite/:id
 Get a list of all favorited movies | GET localhost:5000/favourites
 
+## Assumption
+All api endpoints (except registration and login) are only allowed to be seen by authenticated users.
+
 ## Important Notes
 
 * **x-auth-token need to be passed in the header of each request for authentication. This token will be retrieved from login endpoint.**
 
 * **For details about endpoints and testing of endpoints, import the json file inside postman_collection folder to postman.**
 
-* **Assumption: All api endpoints (except registration and login) are only allowed to be seen by authenticated users.**
