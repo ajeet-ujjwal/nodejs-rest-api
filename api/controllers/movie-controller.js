@@ -49,7 +49,29 @@ const getMovies = async (req, res) => {
     var search = req.query.search;
     const regex = new RegExp(search, 'i');
     try {
-        const movies = await Movie.find({ title: { $regex: regex } });
+        // Filter the movies by search query and sort by popularity
+        movies = await Movie.aggregate([
+            { $match: { title: { $regex: regex } } },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "favourite_movies",
+                    as: "user",
+                },
+            },
+            {
+                $addFields: {
+                    count: { $size: "$user" },
+                },
+            },
+            {
+                $sort: { count: -1 },
+            },
+            {
+                $unset: ["user", "count"],
+            },
+        ]);
         return res.status(200).json(movies);
     } catch (err) {
         return res.status(500).json({ message: 'server error' + err });
@@ -69,8 +91,7 @@ const setFavouriteMovie = async (req, res) => {
         const movie = await Movie.findById(movieId);
         if (!movie)
             return res.status(404).json('there is no movie with this id.');
-        const user = await User.findByIdAndUpdate({ _id: req.user.userId }, 
-            { $addToSet: { favourite_movies: movieId } }, { new: true });
+        const user = await User.findByIdAndUpdate({ _id: req.user.userId }, { $addToSet: { favourite_movies: movieId } }, { new: true });
         return res.status(200).json(user)
     } catch (err) {
         res.status(500).json({ error: 'server error ' + err });
