@@ -1,4 +1,4 @@
-# Rest APIs for Movies using Node.js, Express and MongoDB
+# A sample project for creating Rest APIs using Node.js, Express and MongoDB
 
 ## Description
 
