@@ -1,4 +1,4 @@
-# movie-api
+# Rest APIs for Movies using Node.js, Express and MongoDB
 
 ## Description
 
